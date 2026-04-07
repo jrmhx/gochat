@@ -14,6 +14,9 @@ func main() {
 	var conn net.Conn
 	var err error
 	scanner := bufio.NewScanner(os.Stdin)
+	scannerBuffer := make([]byte, 0, 1024)
+	scanner.Buffer(scannerBuffer, 10240)
+	buffer := make([]byte, 1024)
 	for {
 		if conn, err = net.Dial("tcp", host); err != nil {
 			fmt.Println("failed to connect " + host + " retry...")
@@ -26,11 +29,12 @@ func main() {
 	for {
 		fmt.Print("> ")
 		if scanner.Scan() {
-			wbuffer := scanner.Bytes()
-			conn.Write(wbuffer)
-			rbuffer := make([]byte, 1024)
-			if _, err := conn.Read(rbuffer); err == nil {
-				fmt.Println(string(rbuffer))
+			if len(scanner.Bytes()) == 0 {
+				continue
+			}
+			conn.Write(scanner.Bytes())
+			if n, err := conn.Read(buffer); err == nil {
+				fmt.Println(string(buffer[:n]))
 			} else {
 				conn.Close()
 				break
