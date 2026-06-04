@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "debug server",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "./cmd/server",
+      "cwd": "${workspaceFolder}",
+      "dlvToolPath": "/home/jrmh/go/bin/dlv"
+    }
+  ]
+}
